@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,8 @@ import Link from 'next/link';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { AISuggestionsPanel } from '@/components/email/ai-suggestions-panel';
 
-export default function ComposePage() {
+// Separate component that uses useSearchParams
+function ComposeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailId = searchParams.get('id');
@@ -256,95 +257,4 @@ export default function ComposePage() {
                     {isGenerating ? 'Generating...' : 'Generate AI Draft'}
                   </Button>
                   <Button
-                    onClick={() => setShowAiPanel(!showAiPanel)}
-                    disabled={isLoading}
-                    variant="outline"
-                    className="gap-2 flex-1"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    Enhance
-                  </Button>
-                  <Button
-                    onClick={() => saveEmail('draft')}
-                    disabled={isSaving || isLoading}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    Save Draft
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* AI Suggestion Panel */}
-          <div className="space-y-4">
-            {showAiPanel && (
-              <AISuggestionsPanel 
-                emailBody={body}
-                onApplySuggestion={handleApplySuggestion}
-              />
-            )}
-
-            {showAiDraft && aiBody && (
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/50">
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-blue-600" />
-                    AI Suggestion
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="bg-background p-4 rounded-lg text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">
-                    {aiBody}
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      onClick={() => {
-                        setBody(aiBody);
-                        setShowAiDraft(false);
-                      }}
-                      className="w-full"
-                      size="sm"
-                    >
-                      Use This Draft
-                    </Button>
-                    <Button
-                      onClick={() => generateAiDraft()}
-                      variant="outline"
-                      size="sm"
-                      disabled={isGenerating}
-                    >
-                      Generate Another
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button
-                  onClick={() => saveEmail('sent')}
-                  disabled={isSaving || isLoading}
-                  className="w-full gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  Send Email
-                </Button>
-                <Link href="/protected/inbox" className="block">
-                  <Button variant="outline" className="w-full">
-                    Back to Inbox
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
+                    onClick={() => setShowAiPanel(!showA
