@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.6%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.6%;
+    --primary: 0 0% 3.6%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 3.6%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 39.2%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 3.6%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.6%;
+    --chart-1: 191 91% 36.8%;
+    --chart-2: 198 93% 60%;
+    --chart-3: 262 80% 50%;
+    --chart-4: 45 93% 47%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  
+  .dark {
+    --background: 0 0% 3.6%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 3.6%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 264 70% 50.4%;
+    --chart-2: 179 100% 36.3%;
+    --chart-3: 45 87% 50.7%;
+    --chart-4: 269 97% 85.1%;
+    --chart-5: 340 75% 55.8%;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .bg-background { background-color: hsl(var(--background)); }
+  .bg-foreground { background-color: hsl(var(--foreground)); }
+  .bg-card { background-color: hsl(var(--card)); }
+  .bg-muted { background-color: hsl(var(--muted)); }
+  .bg-accent { background-color: hsl(var(--accent)); }
+  .bg-destructive { background-color: hsl(var(--destructive)); }
+  .bg-popover { background-color: hsl(var(--popover)); }
+  .bg-primary { background-color: hsl(var(--primary)); }
+  .bg-secondary { background-color: hsl(var(--secondary)); }
+  .bg-input { background-color: hsl(var(--input)); }
+
+  .text-foreground { color: hsl(var(--foreground)); }
+  .text-card-foreground { color: hsl(var(--card-foreground)); }
+  .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+  .text-accent-foreground { color: hsl(var(--accent-foreground)); }
+  .text-destructive-foreground { color: hsl(var(--destructive-foreground)); }
+  .text-popover-foreground { color: hsl(var(--popover-foreground)); }
+  .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+  .text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
+
+  .border-border { border-color: hsl(var(--border)); }
+
+  .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+  .bg-background\/50 { background-color: hsl(var(--background) / 0.5); }
+  .bg-background\/95 { background-color: hsl(var(--background) / 0.95); }
+  .bg-background\/60 { background-color: hsl(var(--background) / 0.6); }
+
+  /* Add missing slide animations for sheet component */
+  .slide-in-from-right {
+    animation: slideInFromRight 0.5s ease-in-out;
+  }
+  .slide-out-to-right {
+    animation: slideOutToRight 0.3s ease-in-out;
+  }
+  .slide-in-from-left {
+    animation: slideInFromLeft 0.5s ease-in-out;
+  }
+  .slide-out-to-left {
+    animation: slideOutToLeft 0.3s ease-in-out;
+  }
+  .slide-in-from-top {
+    animation: slideInFromTop 0.5s ease-in-out;
+  }
+  .slide-out-to-top {
+    animation: slideOutToTop 0.3s ease-in-out;
+  }
+  .slide-in-from-bottom {
+    animation: slideInFromBottom 0.5s ease-in-out;
+  }
+  .slide-out-to-bottom {
+    animation: slideOutToBottom 0.3s ease-in-out;
+  }
+
+  @keyframes slideInFromRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOutToRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+  @keyframes slideInFromLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOutToLeft {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
+  }
+  @keyframes slideInFromTop {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideOutToTop {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100%); opacity: 0; }
+  }
+  @keyframes slideInFromBottom {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideOutToBottom {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
+  }
+}
