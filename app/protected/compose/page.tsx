@@ -13,7 +13,6 @@ import Link from 'next/link';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { AISuggestionsPanel } from '@/components/email/ai-suggestions-panel';
 
-// Separate component that uses useSearchParams
 function ComposeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,7 +32,6 @@ function ComposeContent() {
 
   const supabase = createClient();
 
-  // Load email if editing
   useEffect(() => {
     if (emailId) {
       const loadEmail = async () => {
@@ -125,7 +123,6 @@ function ComposeContent() {
       };
 
       if (emailId) {
-        // Update existing email
         const { error: updateError } = await supabase
           .from('emails')
           .update(emailData)
@@ -134,7 +131,6 @@ function ComposeContent() {
 
         if (updateError) throw updateError;
       } else {
-        // Create new email
         const { error: insertError } = await supabase
           .from('emails')
           .insert([emailData]);
@@ -142,14 +138,13 @@ function ComposeContent() {
         if (insertError) throw insertError;
       }
 
-      // Track analytics
       if (status === 'sent' && aiBody) {
         await supabase
           .from('email_analytics')
           .insert([{
             user_id: user.id,
             was_ai_generated: true,
-            time_saved_seconds: Math.floor(Math.random() * 300) + 60, // 1-5 minutes saved
+            time_saved_seconds: Math.floor(Math.random() * 300) + 60,
           }]);
       }
 
@@ -163,7 +158,6 @@ function ComposeContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/50">
-      {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -179,17 +173,13 @@ function ComposeContent() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Email Compose Form */}
           <div className="md:col-span-2">
             <Card>
               <CardHeader>
                 <CardTitle>Draft New Email</CardTitle>
-                <CardDescription>
-                  Compose your email and let AI help refine it
-                </CardDescription>
+                <CardDescription>Compose your email and let AI help refine it</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {error && (
@@ -257,4 +247,109 @@ function ComposeContent() {
                     {isGenerating ? 'Generating...' : 'Generate AI Draft'}
                   </Button>
                   <Button
-                    onClick={() => setShowAiPanel(!showA
+                    onClick={() => setShowAiPanel(!showAiPanel)}
+                    disabled={isLoading}
+                    variant="outline"
+                    className="gap-2 flex-1"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Enhance
+                  </Button>
+                  <Button
+                    onClick={() => saveEmail('draft')}
+                    disabled={isSaving || isLoading}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Save Draft
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-4">
+            {showAiPanel && (
+              <AISuggestionsPanel 
+                emailBody={body}
+                onApplySuggestion={handleApplySuggestion}
+              />
+            )}
+
+            {showAiDraft && aiBody && (
+              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/50">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-blue-600" />
+                    AI Suggestion
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-background p-4 rounded-lg text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">
+                    {aiBody}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={() => {
+                        setBody(aiBody);
+                        setShowAiDraft(false);
+                      }}
+                      className="w-full"
+                      size="sm"
+                    >
+                      Use This Draft
+                    </Button>
+                    <Button
+                      onClick={() => generateAiDraft()}
+                      variant="outline"
+                      size="sm"
+                      disabled={isGenerating}
+                    >
+                      Generate Another
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button
+                  onClick={() => saveEmail('sent')}
+                  disabled={isSaving || isLoading}
+                  className="w-full gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  Send Email
+                </Button>
+                <Link href="/protected/inbox" className="block">
+                  <Button variant="outline" className="w-full">
+                    Back to Inbox
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default function ComposePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading compose page...</p>
+        </div>
+      </div>
+    }>
+      <ComposeContent />
+    </Suspense>
+  );
+}
